@@ -2,6 +2,16 @@ FROM researchit/shiny-server:openshift
 LABEL maintainer="Levi Baber <baber@iastate.edu>"
 
 
+ENV \
+    # DEPRECATED: Use above LABEL instead, because this will be removed in future versions.
+    STI_SCRIPTS_URL=image:///usr/libexec/s2i \
+    # Path to be used in other layers to place s2i scripts into
+    STI_SCRIPTS_PATH=/usr/libexec/s2i \
+    APP_ROOT=/opt/app-root \
+    # The $HOME is not set by default, but some applications needs this variable
+    HOME=/opt/app-root/src \
+    PATH=/opt/app-root/src/bin:/opt/app-root/bin:$PATH
+
 USER 0
 #system dependencies for R packages
 RUN yum -y install libxml2-devel libcurl-devel openssl-devel v8-devel
