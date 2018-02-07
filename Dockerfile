@@ -19,7 +19,7 @@ RUN yum -y install libxml2-devel libcurl-devel openssl-devel v8-devel
 #R dependencies for TissueEnrich 
 RUN Rscript -e "install.packages(c('DT', 'tidyverse', 'shinythemes', 'plotly', 'shinyjs', 'rsconnect', 'shinycssloaders', 'V8', 'sqldf'), repos='https://cran.rstudio.com/')" 
 RUN sed -i -e 's/run_as 1001;/run_as :HOME_USER:;/g' /etc/shiny-server/shiny-server.conf; 
-
+RUN sed -i -e 's/site_dir \/opt\/app-root;/user_dirs;/g' /etc/shiny-server/shiny-server.conf
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 
