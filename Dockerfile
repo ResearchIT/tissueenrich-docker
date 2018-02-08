@@ -30,4 +30,4 @@ COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 COPY passwd.template /tmp/passwd.template
 
 USER 1001
-ENTRYPOINT['/usr/libexec/s2i/bin/run']
+ENTRYPOINT ['/usr/libexec/s2i/bin/run']
