@@ -24,8 +24,9 @@ RUN Rscript -e "install.packages(c('DT', 'tidyverse', 'shinythemes', 'plotly', '
 RUN sed -i -e 's/run_as 1001;/run_as openshift;/g' /etc/shiny-server/shiny-server.conf; 
 RUN sed -i -e 's|/opt/app-root|/opt/app-root/src|g' /etc/shiny-server/shiny-server.conf
 
-#log perms
+#perms
 RUN chmod -R o+w /var/log/shiny-server 
+RUN chmod g+w /var/lib/shiny-server
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
