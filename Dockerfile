@@ -9,20 +9,24 @@ ENV \
     STI_SCRIPTS_PATH=/usr/libexec/s2i \
     APP_ROOT=/opt/app-root \
     # The $HOME is not set by default, but some applications needs this variable
-    HOME=/opt/app-root/src \
-    PATH=/opt/app-root/src/bin:/opt/app-root/bin:$PATH
+    HOME=/opt/app-root/ \
+    PATH=/opt/app-root/:$PATH
 
 USER 0
 #system dependencies for R packages
 RUN yum -y install libxml2-devel libcurl-devel openssl-devel v8-devel
+RUN yum -y install nss_wrapper
 
 #R dependencies for TissueEnrich 
 RUN Rscript -e "install.packages(c('DT', 'tidyverse', 'shinythemes', 'plotly', 'shinyjs', 'rsconnect', 'shinycssloaders', 'V8', 'sqldf'), repos='https://cran.rstudio.com/')" 
-RUN sed -i -e 's/run_as 1001;/run_as :HOME_USER:;/g' /etc/shiny-server/shiny-server.conf; 
-RUN sed -i -e 's/site_dir \/opt\/app-root;/user_dirs;/g' /etc/shiny-server/shiny-server.conf
-RUN sed -i -e '/log_dir/d' /etc/shiny-server/shiny-server.conf
-RUN sed -i -e '/directory_index/d' /etc/shiny-server/shiny-server.conf
+
+#shiny-server config file changes
+RUN sed -i -e 's/run_as 1001;/run_as openshift;/g' /etc/shiny-server/shiny-server.conf; 
+
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
+
+# Copy the passwd template for nss_wrapper
+COPY passwd.template /tmp/passwd.template
 
 USER 1001
