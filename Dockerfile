@@ -19,7 +19,7 @@ RUN yum -y install nss_wrapper
 
 #R dependencies for TissueEnrich 
 RUN Rscript -e "install.packages(c('DT', 'tidyverse', 'shinythemes', 'plotly', 'shinyjs', 'rsconnect', 'shinycssloaders', 'V8', 'sqldf', 'BiocManager'), repos='https://cran.rstudio.com/')" 
-RUN Rscript -e "BiocManager::install("TissueEnrich", version = "3.8")"
+RUN Rscript -e "BiocManager::install('TissueEnrich', version = '3.8')"
 
 #shiny-server config file changes
 RUN sed -i -e 's/run_as 1001;/run_as openshift;/g' /etc/shiny-server/shiny-server.conf; 
